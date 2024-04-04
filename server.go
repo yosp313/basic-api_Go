@@ -6,15 +6,24 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	router := http.NewServeMux()
 
-		if r.URL.Path[1:] == "" || len(r.URL.Path[1:]) < 3 {
-			fmt.Fprintf(w, "Hello, Dumbass!")
-			return
-		}
+	router.HandleFunc("/", nameController)
 
-		fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
-	})
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: router,
+	}
 
-	http.ListenAndServe(":8080", nil)
+	server.ListenAndServe()
+}
+
+func nameController(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path[1:] == "" || len(r.URL.Path[1:]) < 3 {
+		fmt.Fprintf(w, "Hello, Dumbass!")
+		return
+	}
+
+	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 }
