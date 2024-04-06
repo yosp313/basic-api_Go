@@ -1,4 +1,5 @@
 
 Todo:
-  [] implement the other CRUD functionalities
-  [] implement a logging middleware
+  [X] implement the other CRUD functionalities
+  [X] implement a logging middleware
+  [] Handle the request errors to prevent unexpected behaviours
