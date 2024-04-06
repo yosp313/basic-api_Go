@@ -14,8 +14,9 @@ func CreateProductController(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&product)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		w.WriteHeader(http.StatusBadRequest)
+    fmt.Fprintf(w, "Invalid request body")
+    return
 	}
 
 	services.CreateProductService(&product)
@@ -32,8 +33,9 @@ func FindProductsController(w http.ResponseWriter, r *http.Request) {
 	jsonData, err := json.Marshal(product)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		w.WriteHeader(http.StatusNotFound)
+    fmt.Fprintf(w, "Product not found")
+    return
 	}
 
 	fmt.Fprintf(w, "%s", jsonData)
@@ -47,8 +49,9 @@ func ListAllProductsController(w http.ResponseWriter, r *http.Request) {
 	jsonData, err := json.Marshal(products)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		w.WriteHeader(http.StatusInternalServerError)
+    fmt.Fprintf(w, "Internal Server Error")
+    return
 	}
 
 	fmt.Fprintf(w, "%s\n", jsonData)
@@ -73,8 +76,9 @@ func UpdateProductController(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&updatedProduct)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		w.WriteHeader(http.StatusBadRequest)
+    fmt.Fprintf(w, "Bad Request")
+    return
 	}
 
 	services.UpdateProductService(&updatedProduct, &product, id)
