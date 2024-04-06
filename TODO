@@ -2,4 +2,5 @@
 Todo:
   [X] implement the other CRUD functionalities
   [X] implement a logging middleware
+  [] make a routes file to manage all the routes for the products route
   [] Handle the request errors to prevent unexpected behaviours
