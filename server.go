@@ -16,7 +16,7 @@ var db *gorm.DB = configs.DbConfig()
 func main() {
 	db.AutoMigrate(&models.Product{})
 
-	router := http.NewServeMux()
+  router := http.NewServeMux()
 
 	router.HandleFunc("/", controllers.NameController)
 	router.HandleFunc("/ip", controllers.IpController)
