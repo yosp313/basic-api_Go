@@ -1,14 +1,14 @@
 package main
 
 import (
-  "basic-api/configs"
-  "basic-api/controllers"
-  "basic-api/middleware"
-  "basic-api/models"
-  "fmt"
-  "net/http"
+	"basic-api/configs"
+	"basic-api/controllers"
+	"basic-api/middleware"
+	"basic-api/models"
+	"fmt"
+	"net/http"
 
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB = configs.DbConfig()
