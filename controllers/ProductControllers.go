@@ -73,13 +73,13 @@ func UpdateProductController(w http.ResponseWriter, r *http.Request) {
 	var updatedProduct models.Product
 
 	id := r.PathValue("id")
-	err := json.NewDecoder(r.Body).Decode(&updatedProduct)
 
-	if err != nil {
+  if 	err := json.NewDecoder(r.Body).Decode(&updatedProduct); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
     fmt.Fprintf(w, "Bad Request")
     return
 	}
+
 
 	services.UpdateProductService(&updatedProduct, &product, id)
 
