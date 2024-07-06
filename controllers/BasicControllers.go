@@ -15,7 +15,7 @@ func IpController(w http.ResponseWriter, r *http.Request) {
 func NameController(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path[1:] == "" || len(r.URL.Path[1:]) < 3 {
-		fmt.Fprintf(w, "Hello, Dumbass!")
+		fmt.Fprintf(w, "Please enter a name")
 		return
 	}
 

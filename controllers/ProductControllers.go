@@ -1,17 +1,22 @@
 package controllers
 
 import (
-  "basic-api/models"
-  "basic-api/services"
-  "encoding/json"
-  "fmt"
-  "net/http"
+	"basic-api/configs"
+	"basic-api/models"
+	"basic-api/services"
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB = configs.DbConfig()
 
 func CreateProductController(w http.ResponseWriter, r *http.Request) {
   var product models.Product
 
-  err := json.NewDecoder(r.Body).Decode(&product)
+  err := json.NewDecoder(r.Body).Decode( &product)
 
   if err != nil {
     w.WriteHeader(http.StatusBadRequest)
@@ -19,7 +24,7 @@ func CreateProductController(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  services.CreateProductService(&product)
+  services.CreateProductService(db, &product)
 
   fmt.Fprintf(w, "The product have been created successfully!: %+v", product)
 }
@@ -29,7 +34,14 @@ func FindProductsController(w http.ResponseWriter, r *http.Request) {
 
   id := r.PathValue("id")
 
-  services.FindProductByCodeService(&product, id)
+  result := services.FindProductByCodeService(db, &product, id)
+  
+  if result == nil {
+    w.WriteHeader(http.StatusNotFound)
+    fmt.Fprintf(w, "Product not found")
+    return
+  }
+
   jsonData, err := json.Marshal(product)
 
   if err != nil {
@@ -44,7 +56,7 @@ func FindProductsController(w http.ResponseWriter, r *http.Request) {
 func ListAllProductsController(w http.ResponseWriter, r *http.Request) {
   var products []models.Product
 
-  services.ListAllProductsService(&products)
+  services.ListAllProductsService(db, &products)
 
   jsonData, err := json.Marshal(products)
 
@@ -55,7 +67,6 @@ func ListAllProductsController(w http.ResponseWriter, r *http.Request) {
   }
 
   w.WriteHeader(http.StatusOK)
-  json.NewEncoder(w).Encode(products)
   fmt.Fprintf(w, "%s\n", jsonData)
 }
 
@@ -64,7 +75,7 @@ func DeleteProductController(w http.ResponseWriter, r *http.Request) {
 
   id := r.PathValue("id")
 
-  services.DeleteProductService(&product, id)
+  services.DeleteProductService(db, &product, id)
 
   fmt.Fprintf(w, "Deleted Product with ID: %s", id)
 }
@@ -83,7 +94,7 @@ func UpdateProductController(w http.ResponseWriter, r *http.Request) {
   }
 
 
-  services.UpdateProductService(&updatedProduct, &product, id)
+  services.UpdateProductService(db, &updatedProduct, &product, id)
 
   fmt.Fprintf(w, "The product has been updated successfully!")
 }
