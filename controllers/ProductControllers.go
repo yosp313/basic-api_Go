@@ -13,6 +13,10 @@ import (
 
 var db *gorm.DB = configs.DbConfig()
 
+type Error struct{
+  Error string `json:"error"`
+}
+
 func CreateProductController(w http.ResponseWriter, r *http.Request) {
   var product models.Product
 
@@ -38,7 +42,20 @@ func FindProductsController(w http.ResponseWriter, r *http.Request) {
   
   if result == nil {
     w.WriteHeader(http.StatusNotFound)
-    fmt.Fprintf(w, "Product not found")
+
+    errorResponse := Error{
+      Error: "Product not found",
+    }
+
+    jsonData, err := json.Marshal(errorResponse)
+
+    if err != nil {
+      w.WriteHeader(http.StatusInternalServerError)
+      fmt.Fprintf(w, "Internal Server Error")
+      return
+    }
+    w.WriteHeader(http.StatusNotFound)
+    w.Write(jsonData)
     return
   }
 
@@ -50,7 +67,7 @@ func FindProductsController(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  fmt.Fprintf(w, "%s", jsonData)
+  w.Write(jsonData)
 }
 
 func ListAllProductsController(w http.ResponseWriter, r *http.Request) {
